@@ -4,12 +4,18 @@ import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as model;
 
 import '../helper/failure.dart';
+import '../helper/shared_state/providers.dart';
 import '../helper/type_defs.dart';
 
-/*final authApiProvider = Provider((ref) {
+final currentUserAccountProvider = FutureProvider<model.User?>((ref) {
+  final authApi = ref.watch(authApiProvider);
+  return authApi.currentUserAccount();
+});
+
+final authApiProvider = Provider((ref) {
   final account = ref.watch(appwriteAccountProvider);
   return AuthApi(account: account);
-});*/
+});
 
 abstract class IAuthApi {
   FutureEither<model.User> signup({

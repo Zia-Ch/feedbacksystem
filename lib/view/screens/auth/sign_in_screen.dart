@@ -99,7 +99,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             const Spacer(),
             GenericElevatedButton(
                 voidCallBack: state.isLoading ? null : _submit,
-                isLoading: false, // ! Hard coded value for isLoading
+                isLoading: state.isLoading, // ! Hard coded value for isLoading
                 size: size,
                 btnText: "Sign In"), // ! Hard coded value for text
 

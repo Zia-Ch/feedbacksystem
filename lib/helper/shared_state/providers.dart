@@ -14,3 +14,6 @@ final appwriteCleintProvider = Provider((ref) {
 
 final appwriteAccountProvider =
     Provider((ref) => Account(ref.watch(appwriteCleintProvider)));
+
+final appwriteDatabaseProvider =
+    Provider((ref) => Databases(ref.watch(appwriteCleintProvider)));

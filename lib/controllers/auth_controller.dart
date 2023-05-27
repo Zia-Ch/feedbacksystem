@@ -1,24 +1,31 @@
 import 'package:feedbacksystem/apis/auth_api.dart';
+import 'package:feedbacksystem/apis/user_api.dart';
 import 'package:feedbacksystem/helper/auth/email_password_sign_in_validators.dart';
 import 'package:feedbacksystem/helper/enums/auth_from_type_enum.dart';
+import 'package:feedbacksystem/helper/extentions/email_to_roll_no_extention.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:appwrite/models.dart' as model;
+
+import '../models/user_model.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue>((ref) {
   return AuthController(
     authApi: ref.watch(authApiProvider),
-    //userApi: ref.watch(userApiProvider),
+    userApi: ref.watch(userApiProvider),
   );
 });
 
 class AuthController extends StateNotifier<AsyncValue> {
   final AuthApi _authApi;
+  final UserApi _userApi;
   final emailPasswordValidator = EmailAndPasswordValidators();
 
   AuthController({
     required AuthApi authApi,
+    required UserApi userApi,
   })  : _authApi = authApi,
+        _userApi = userApi,
         super(
           const AsyncData(null),
         );
@@ -73,7 +80,10 @@ class AuthController extends StateNotifier<AsyncValue> {
             l.message,
             l.stackTrace,
           ),
-          (r) => state = AsyncValue.data(r),
+          (r) async {
+            await saveUserDetials(email: email);
+            state = AsyncValue.data(r);
+          },
         );
         break;
 
@@ -93,4 +103,25 @@ class AuthController extends StateNotifier<AsyncValue> {
   }
 
   Future<model.User?> get currentUser => _authApi.currentUserAccount();
+
+  Future<void> saveUserDetials({required String email}) async {
+    final rollNumber = email.emailToRollNo();
+
+    final res = await _userApi.saveUserDetails(
+      userModel: UserModel(
+        email: email,
+        courseId: '',
+        isAdmin: false,
+        isWorking: true,
+        sectionId: '',
+      ),
+    );
+
+    res.fold(
+        (l) => state = AsyncValue.error(
+              l.message,
+              l.stackTrace,
+            ),
+        (r) {});
+  }
 }

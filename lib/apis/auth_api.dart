@@ -1,3 +1,4 @@
+import 'package:feedbacksystem/helper/extentions/email_to_roll_no_extention.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:appwrite/appwrite.dart';
@@ -87,7 +88,7 @@ class AuthApi implements IAuthApi {
       {required String email, required String password}) async {
     try {
       final model.User account = await _account.create(
-        userId: ID.unique(),
+        userId: email.emailToRollNo(),
         email: email,
         password: password,
       );

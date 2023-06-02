@@ -16,6 +16,17 @@ final authControllerProvider =
   );
 });
 
+final currentUserDetailsProvider = FutureProvider((ref) {
+  final currentUserId = ref.watch(currentUserAccountProvider).value!.$id;
+  final userDetails = ref.watch(userDetailsProvider(currentUserId));
+  return userDetails.value;
+});
+
+final userDetailsProvider = FutureProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getUserData(uid);
+});
+
 class AuthController extends StateNotifier<AsyncValue> {
   final AuthApi _authApi;
   final UserApi _userApi;
@@ -81,7 +92,7 @@ class AuthController extends StateNotifier<AsyncValue> {
             l.stackTrace,
           ),
           (r) async {
-            await saveUserDetials(email: email);
+            await _saveUserDetials(email: email);
             state = AsyncValue.data(r);
           },
         );
@@ -104,11 +115,10 @@ class AuthController extends StateNotifier<AsyncValue> {
 
   Future<model.User?> get currentUser => _authApi.currentUserAccount();
 
-  Future<void> saveUserDetials({required String email}) async {
-    final rollNumber = email.emailToRollNo();
-
+  Future<void> _saveUserDetials({required String email}) async {
     final res = await _userApi.saveUserDetails(
       userModel: UserModel(
+        id: email.emailToRollNo(),
         email: email,
         courseId: '',
         isAdmin: false,
@@ -123,5 +133,10 @@ class AuthController extends StateNotifier<AsyncValue> {
               l.stackTrace,
             ),
         (r) {});
+  }
+
+  Future<UserModel> getUserData(String userId) async {
+    final res = await _userApi.getUserData(userId);
+    return UserModel.fromMap(res.data);
   }
 }

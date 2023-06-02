@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class UserModel {
+  final String id;
   final String email;
   final String sectionId;
   final String courseId;
@@ -9,6 +10,7 @@ class UserModel {
   final bool isAdmin;
 
   UserModel({
+    required this.id,
     required this.email,
     required this.sectionId,
     required this.courseId,
@@ -19,13 +21,13 @@ class UserModel {
   UserModel copyWith({
     String? id,
     String? email,
-    String? password,
     String? sectionId,
     String? courseId,
     bool? isWorking,
     bool? isAdmin,
   }) {
     return UserModel(
+      id: id ?? this.id,
       email: email ?? this.email,
       sectionId: sectionId ?? this.sectionId,
       courseId: courseId ?? this.courseId,
@@ -46,6 +48,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      id: map['\$id'] as String,
       email: map['email'] as String,
       sectionId: map['sectionId'] as String,
       courseId: map['courseId'] as String,
@@ -61,7 +64,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel( email: $email,  sectionId: $sectionId, courseId: $courseId, isWorking: $isWorking, isAdmin: $isAdmin)';
+    return 'UserModel(id: $id, email: $email, sectionId: $sectionId, courseId: $courseId, isWorking: $isWorking, isAdmin: $isAdmin)';
   }
 
   @override

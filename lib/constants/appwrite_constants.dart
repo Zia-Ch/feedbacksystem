@@ -18,6 +18,9 @@ class AppwriteConstants {
   static const String questionsCollectionId = "6440bfa28e9ca1896b9d";
   static const String teachersCollectionId = "6440c0444a6d9908415e";
   static const String coursesCollectionId = "6440c7b118042631a8a6";
+  static const String userTeacherFeedbackMNCollectionId =
+      "64785e2304e2c6501ab8";
+  //static const String feedbackQuestionsMNCollectionId = "64722b08cf4f9ee57ab1";
 
   /*static String imageUrl(String imageId) =>
       '$endpoint/storage/buckets/$imageBucket/files/$imageId/view?project=$projectiD&mode=admin';*/

@@ -40,6 +40,7 @@ dependencies:
   appwrite: ^9.0.0
   google_fonts: ^4.0.4
   top_snackbar_flutter: ^3.0.0+1
+  flutter_rating_bar: ^4.0.1
   
 
 dev_dependencies:

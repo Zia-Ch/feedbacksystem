@@ -1,23 +1,29 @@
 import 'package:feedbacksystem/apis/feedback_api.dart';
+import 'package:feedbacksystem/apis/teachers_api.dart';
 import 'package:feedbacksystem/helper/enums/question_type.dart';
 import 'package:feedbacksystem/models/feedback_home_data_model.dart';
 import 'package:feedbacksystem/models/indexd_feedbacks.dart';
 import 'package:feedbacksystem/models/question_model.dart';
 import 'package:feedbacksystem/models/subject_model.dart';
+import 'package:feedbacksystem/models/teacher_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../helper/shared_state/updator.dart';
 import '../models/user_teacher_feedback_mxn_model.dart';
 
 final feedbackControllerProvider =
     StateNotifierProvider<FeedbackController, AsyncValue>((ref) {
   return FeedbackController(
     feedbackApi: ref.watch(feedBackApiProvider),
+    teacherApi: ref.watch(teacherApiProvider),
   );
 });
 
 final feedbackSubjectsProvider =
     FutureProvider.family.autoDispose((ref, String userId) {
   final feedbackController = ref.watch(feedbackControllerProvider.notifier);
+  ref.watch(futureStateUpdator);
+
   return feedbackController.getPendingFeedbacksData(userId);
 });
 
@@ -29,9 +35,12 @@ final feedbackQuestionProvider = FutureProvider.autoDispose((ref) {
 
 class FeedbackController extends StateNotifier<AsyncValue> {
   final FeedBackApi _feedbackApi;
+  final TeacherApi _teacherApi;
 
-  FeedbackController({required FeedBackApi feedbackApi})
+  FeedbackController(
+      {required FeedBackApi feedbackApi, required TeacherApi teacherApi})
       : _feedbackApi = feedbackApi,
+        _teacherApi = teacherApi,
         super(
           const AsyncData(null),
         );
@@ -45,11 +54,15 @@ class FeedbackController extends StateNotifier<AsyncValue> {
       final res = await _feedbackApi.getPendingFeedbackSubjectsData(
           pendingfeedbacks.map((e) => e.subjectId).toList());
 
-      for (var element in res) {
-        final subjectModel = SubjectModel.fromMap(element.data);
+      final teachers = await getTeacherByIds(pendingfeedbacks);
+
+      for (int i = 0; i < res.length; i++) {
+        final subjectModel = SubjectModel.fromMap(res[i].data);
         result.add(
           FeedbackHomeDataModel(
             subjectModel: subjectModel,
+            teacher: teachers
+                .firstWhere((e) => e.id == pendingfeedbacks[i].teacherId),
             userTeacherFeedbackMxN: pendingfeedbacks.firstWhere(
               (e) => e.subjectId == subjectModel.id,
             ),
@@ -69,6 +82,20 @@ class FeedbackController extends StateNotifier<AsyncValue> {
       result.add(UserTeacherFeedbackMxN.fromMap(element.data));
     }
     return result;
+  }
+
+  Future<List<Teacher>> getTeacherByIds(
+      List<UserTeacherFeedbackMxN> userTeacherList) async {
+    final List<Teacher> teacherDataList = [];
+    for (var item in userTeacherList) {
+      final res = await _teacherApi.getTeacherById(item.teacherId);
+
+      res.fold((l) => l.message, (r) {
+        teacherDataList.add(Teacher.fromMap(r));
+      });
+    }
+
+    return teacherDataList;
   }
 
   Future<List<QuestionModel>> getQuestions() async {
@@ -123,4 +150,24 @@ class FeedbackController extends StateNotifier<AsyncValue> {
     }
     return state.hasError == false;
   }
+
+  // Future<void> updateTeacherRating(List<IndexdFeedBacks> feedbacks) async {
+  //   double totalRating = 0;
+  //   double totalratingQuestions = 0;
+
+  //   for(var feedback in feedbacks){
+
+  //     if(feedback.questionType  == QuestionType.rating){
+  //       totalRating += feedback.feedback.rating;
+  //       totalratingQuestions++;
+  //     }
+  //   }
+
+  //   await _teacherApi.updateTeacherData(
+  //     Teacher(
+  //       rating: totalRating / totalratingQuestions,
+  //     ),
+  //   );
+
+  // }
 }

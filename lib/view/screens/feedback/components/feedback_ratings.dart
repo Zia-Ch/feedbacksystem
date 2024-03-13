@@ -5,9 +5,11 @@ class FeedbackRatings extends StatelessWidget {
   const FeedbackRatings({
     Key? key,
     required this.onSubmitRating,
+    required this.initialValue,
   }) : super(key: key);
 
   final void Function(double value) onSubmitRating;
+  final double initialValue;
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -32,7 +34,7 @@ class FeedbackRatings extends StatelessWidget {
             child: RatingBar.builder(
               wrapAlignment: WrapAlignment.center,
               itemPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-              initialRating: 0.0, //widget.properties!.ratingValue!,
+              initialRating: initialValue, //widget.properties!.ratingValue!,
               itemCount: 5,
               itemBuilder: (context, index) {
                 switch (index) {

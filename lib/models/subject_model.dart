@@ -6,14 +6,12 @@ class SubjectModel {
   final String subjectName;
   final String subjectCode;
   final String courseId;
-  final String semesterId;
 
   SubjectModel({
     required this.id,
     required this.subjectName,
     required this.subjectCode,
     required this.courseId,
-    required this.semesterId,
   });
 
   SubjectModel copyWith({
@@ -21,24 +19,21 @@ class SubjectModel {
     String? subjectName,
     String? subjectCode,
     String? courseId,
-    String? semesterId,
   }) {
     return SubjectModel(
       id: id ?? this.id,
       subjectName: subjectName ?? this.subjectName,
       subjectCode: subjectCode ?? this.subjectCode,
       courseId: courseId ?? this.courseId,
-      semesterId: semesterId ?? this.semesterId,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      '\$id': id,
+      //'\$id': id,
       'subjectName': subjectName,
       'subjectCode': subjectCode,
       'courseId': courseId,
-      'semesterId': semesterId,
     };
   }
 
@@ -48,7 +43,6 @@ class SubjectModel {
       subjectName: map['subjectName'] as String,
       subjectCode: map['subjectCode'] as String,
       courseId: map['courseId'] as String,
-      semesterId: map['semesterId'] as String,
     );
   }
 
@@ -59,7 +53,7 @@ class SubjectModel {
 
   @override
   String toString() {
-    return 'SubjectModel(id: $id, subjectName: $subjectName, subjectCode: $subjectCode, courseId: $courseId, semesterId: $semesterId)';
+    return 'SubjectModel(id: $id, subjectName: $subjectName, subjectCode: $subjectCode, courseId: $courseId)';
   }
 
   @override
@@ -69,8 +63,7 @@ class SubjectModel {
     return other.id == id &&
         other.subjectName == subjectName &&
         other.subjectCode == subjectCode &&
-        other.courseId == courseId &&
-        other.semesterId == semesterId;
+        other.courseId == courseId;
   }
 
   @override
@@ -78,7 +71,6 @@ class SubjectModel {
     return id.hashCode ^
         subjectName.hashCode ^
         subjectCode.hashCode ^
-        courseId.hashCode ^
-        semesterId.hashCode;
+        courseId.hashCode;
   }
 }

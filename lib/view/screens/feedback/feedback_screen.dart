@@ -7,12 +7,12 @@ import 'package:feedbacksystem/models/feedback_model.dart';
 import 'package:feedbacksystem/models/indexd_feedbacks.dart';
 import 'package:feedbacksystem/view/screens/feedback/components/feedback_card.dart';
 import 'package:feedbacksystem/view/screens/feedback/components/feedback_card_header.dart';
-import 'package:feedbacksystem/view/screens/home/home_screen.dart';
 import 'package:feedbacksystem/view/widgets/async_value_widget.dart';
 import 'package:feedbacksystem/view/widgets/gn_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../helper/shared_state/updator.dart';
 import 'components/feedback_ratings.dart';
 import 'components/feedback_textfield.dart';
 
@@ -30,6 +30,15 @@ class FeedbackScreen extends ConsumerStatefulWidget {
 
 class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
   final List<IndexdFeedBacks> feedbackList = [];
+
+  double getRating(String id) {
+    for (var element in feedbackList) {
+      if (element.feedback.questionId == id) {
+        return element.feedback.rating;
+      }
+    }
+    return 0.0;
+  }
 
   addToFeedbackList(IndexdFeedBacks item) {
     for (var element in feedbackList) {
@@ -101,6 +110,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                                 },
                               )
                             : FeedbackRatings(
+                                initialValue: getRating(questions[index].id),
                                 onSubmitRating: (double value) {
                                   final item = IndexdFeedBacks(
                                     index: index,
@@ -144,8 +154,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                               questions.value!.length,
                               widget.data.userTeacherFeedbackMxN);
                           if (submitted) {
-                            Navigator.of(context)
-                                .pushReplacement(HomeScreen.route());
+                            ref.read(futureStateUpdator.notifier).update();
+                            Navigator.of(context).pop();
                           }
                         },
                 );

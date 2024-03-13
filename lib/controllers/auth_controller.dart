@@ -10,6 +10,7 @@ import '../models/user_model.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, AsyncValue>((ref) {
+      
   return AuthController(
     authApi: ref.watch(authApiProvider),
     userApi: ref.watch(userApiProvider),
@@ -122,7 +123,7 @@ class AuthController extends StateNotifier<AsyncValue> {
         email: email,
         courseId: '',
         isAdmin: false,
-        isWorking: true,
+        isDeleted: true,
         sectionId: '',
       ),
     );

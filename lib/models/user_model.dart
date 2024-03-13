@@ -6,7 +6,7 @@ class UserModel {
   final String email;
   final String sectionId;
   final String courseId;
-  final bool isWorking;
+  final bool isDeleted;
   final bool isAdmin;
 
   UserModel({
@@ -14,7 +14,7 @@ class UserModel {
     required this.email,
     required this.sectionId,
     required this.courseId,
-    required this.isWorking,
+    required this.isDeleted,
     required this.isAdmin,
   });
 
@@ -23,7 +23,7 @@ class UserModel {
     String? email,
     String? sectionId,
     String? courseId,
-    bool? isWorking,
+    bool? isDeleted,
     bool? isAdmin,
   }) {
     return UserModel(
@@ -31,7 +31,7 @@ class UserModel {
       email: email ?? this.email,
       sectionId: sectionId ?? this.sectionId,
       courseId: courseId ?? this.courseId,
-      isWorking: isWorking ?? this.isWorking,
+      isDeleted: isDeleted ?? this.isDeleted,
       isAdmin: isAdmin ?? this.isAdmin,
     );
   }
@@ -41,7 +41,7 @@ class UserModel {
       'email': email,
       'sectionId': sectionId,
       'courseId': courseId,
-      'isWorking': isWorking,
+      'isDeleted': isDeleted,
       'isAdmin': isAdmin,
     };
   }
@@ -52,7 +52,7 @@ class UserModel {
       email: map['email'] as String,
       sectionId: map['sectionId'] as String,
       courseId: map['courseId'] as String,
-      isWorking: map['isWorking'] as bool,
+      isDeleted: map['isDeleted'] as bool,
       isAdmin: map['isAdmin'] as bool,
     );
   }
@@ -64,7 +64,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, email: $email, sectionId: $sectionId, courseId: $courseId, isWorking: $isWorking, isAdmin: $isAdmin)';
+    return 'UserModel(id: $id, email: $email, sectionId: $sectionId, courseId: $courseId, isDeleted: $isDeleted, isAdmin: $isAdmin)';
   }
 
   @override
@@ -74,7 +74,7 @@ class UserModel {
     return other.email == email &&
         other.sectionId == sectionId &&
         other.courseId == courseId &&
-        other.isWorking == isWorking &&
+        other.isDeleted == isDeleted &&
         other.isAdmin == isAdmin;
   }
 
@@ -83,7 +83,7 @@ class UserModel {
     return email.hashCode ^
         sectionId.hashCode ^
         courseId.hashCode ^
-        isWorking.hashCode ^
+        isDeleted.hashCode ^
         isAdmin.hashCode;
   }
 }
